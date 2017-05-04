@@ -1,0 +1,6 @@
+scikit-learn
+scikit-plot
+matplotlib
+gensim
+flask
+flask-script

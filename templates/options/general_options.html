@@ -1,0 +1,90 @@
+{% macro text() %}
+    <div class="card z-depth-3">
+        <div class="card-content"><span class="card-title">Text Options</span></div>
+
+        <div class="card-content">
+
+            <div class="input-field">
+                <select id="decomposition-metric">
+                    <option value="euclidean" selected>Euclidean</option>
+                    <option value="cosine">Cosine</option>
+                    <option value="cityblock">Cityblock</option>
+                </select>
+                <label>Decomposition distance metric</label>
+            </div>
+
+            <form action="#">
+                <p class="range-field">
+                    <label for="features">Num of dimensions after decomposition</label>
+                    <input type="range" id="numdimensions" min="2" max="500" value="40"/>
+                </p>
+            </form>
+            <br>
+
+            <div class="input-field">
+                <select id="normalizer">
+                    <option value="none" selected>None</option>
+                    <option value="l1">L1</option>
+                    <option value="l2">L2</option>
+                </select>
+                <label>Normalization (in vectorizers)</label>
+            </div>
+
+            <form action="#">
+                <p class="range-field">
+                    <label for="features">Num of features (in vectorizers)</label>
+                    <input type="range" id="numfeatures" min="500" max="10000" value="4000"/>
+                </p>
+            </form>
+
+            <form action="#">
+                <p>
+                  <input type="checkbox" id="stem"/>
+                  <label for="stem">Stemming</label>
+                </p>
+                <p>
+                  <input type="checkbox" id="stop"/>
+                  <label for="stop">Stopwords Removal</label>
+                </p>
+            </form>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro classifiers() %}
+    <div class="card z-depth-3">
+        <div class="card-content"><span class="card-title">Classifier Options</span></div>
+        <div class="card-content">TODO
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro results_to_show() %}
+    <div class="card">
+        <div class="card-content"><span class="card-title">Show results for</span></div>
+        <div class="card-content">
+            <div class="input-field">
+                <select multiple id="scores-to-show">
+                    <option value="" disabled>Choose your options</option>
+                    <option value="acc" selected>Accuracy</option>
+                    <option value="prec" selected>Precision</option>
+                    <option value="rec" selected>Recall</option>
+                    <option value="f1" selected>F1 Score</option>
+                </select>
+                <label>Classification Scores</label>
+            </div>
+
+            <div class="input-field">
+                <select multiple id="rankings-to-show">
+                    <option value="" disabled>Choose your options</option>
+                    <option value="R-prec">R-prec</option>
+                    <option value="AP">Average Precision</option>
+                    <option value="MAP">Mean Average Precision</option>
+                    <option value="Prec@10">Prec@10</option>
+                    <option value="NDCG@10">NDGC@10</option>
+                </select>
+                <label>Ranking Scores</label>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

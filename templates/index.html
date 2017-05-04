@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Classy</title>
+    <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poiret+One">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/classy.css"/>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stupidtable/1.0.3/stupidtable.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../static/js/parallel.js"></script>
+    <script type="text/javascript" src="../static/js/misc.js"></script>
+    <script type="text/javascript" src="../static/js/classy.js"></script>
+</head>
+
+
+<body class="grey lighten-4">
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-wrapper teal">
+            <a href="#!" class="brand-logo">
+                <i><img src="../static/img/monocle.png" class="logo"/></i><span class="logo-text">Classy</span>
+            </a>
+            <ul class="right">
+                <li><a class="waves-effect waves-light" href="#edit-options"><i class="material-icons">settings_input_composite</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="row">
+
+        <!-- OPTIONS -->
+        <div class="col s3">
+            <div class="card z-depth-3">
+                <div class="card-content">
+                    <span class="card-title">Options</span>
+                    <p>Select the files (text and labels), text options and classification algorithms.</p>
+                </div>
+
+                {% from 'options/input_options.html' import input, quick, run_button %}
+                <div class="card-tabs">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab"><a href="#input" class="active">Input</a></li>
+                        <li class="tab disabled grey lighten-4"><a href="#quick-options">Quick Options</a></li>
+                    </ul>
+                </div>
+                <div class="card-content grey lighten-4">
+                    <div id="input">{{ input() }}</div>
+                    <div id="quick-options">{{ quick() }}</div>
+                </div>
+
+                <div class="card-action hide">
+                    {{ run_button() }}
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="col s9">
+
+            <!-- PARALLEL COORDINATES -->
+            <div class="row">
+                <div class="col s12" id="width-id">
+                    <div class="card z-depth-3 hide" id="parallel-container">
+                        <div class="card-content">
+                            <span class="card-title">Classification Results</span><br>
+                            <div class="row" id="parallel"></div>
+                            <div class="card-action hide">
+                                <a href="#results-table" class="valign-wrapper teal-text">
+                                    <i class="small material-icons">zoom_in</i>
+                                    <h6>Score Summary</h6>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONFUSION MATRIX -->
+            <div class="row">
+                <div class="col s12">
+                    <div class="card z-depth-3 hide" id="confusion-matrix-container">
+                        <div class="card-content">
+                            <span class="card-title">Confusion Matrix</span><br>
+                            <div class="row" id="confusion-matrix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRECISION - RECALL -->
+            <div class="row">
+                <div class="col s12">
+                    <div class="card z-depth-3 hide" id="precision-recall-container">
+                        <div class="card-content">
+                            <span class="card-title">Precision-Recall</span><br>
+                            <div class="row" id="prec-rec"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROC CURVES -->
+            <div class="row">
+                <div class="col s12">
+                    <div class="card z-depth-3 hide" id="roc-curves-container">
+                        <div class="card-content">
+                            <span class="card-title">ROC Curves</span><br>
+                            <div class="row" id="roc-curves"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- LOADING SCREEN MODAL -->
+    <a class="modal-trigger hide" href="#loading-screen"></a>
+    <div id="loading-screen" class="modal">
+        <div class="modal-content">
+            <br>
+            <div class="progress"><div class="indeterminate"></div></div>
+            <br>
+            <div class="progress"><div class="indeterminate"></div></div>
+            <br>
+        </div>
+    </div>
+
+
+    <!-- OPTIONS MODAL -->
+    <div id="edit-options" class="modal bottom-sheet">
+        <div class="modal-content">
+            <div class="container row">
+                {% from 'options/general_options.html' import text, classifiers %}
+                <div class="col s6">{{ text() }}</div>
+                <div class="col s6">{{ classifiers() }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS TABLE MODAL -->
+    <div id="results-table" class="modal">
+        <div class="modal-content">
+            <div class="row" id="results-table-container"></div>
+        </div>
+    </div>
+</body>
+</html>

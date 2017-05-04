@@ -1,0 +1,73 @@
+{% macro input() %}
+    <form action="#">
+        <div class="file-field input-field">
+            <div class="btn"><i class="material-icons">subject</i><input type="file" id="text-input"></div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" placeholder="Text input (features)">
+            </div>
+        </div>
+      </form>
+
+    <form action="#">
+        <div class="file-field input-field">
+            <div class="btn"><i class="material-icons">view_list</i><input type="file" id="labels-input"></div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" placeholder="Labels input">
+            </div>
+        </div>
+    </form>
+
+    <div class="input-field">
+        <select id="label-type">
+            <option value="binary" selected>Binary</option>
+            <option value="multiclass">Multiclass</option>
+            <option value="multilabel" disabled>Multilabel (TODO)</option>
+        </select>
+        <label>Label type</label>
+    </div>
+
+    <a class="waves-effect waves-light btn" id="load-data">
+        <i class="material-icons left">file_upload</i>Load New Dataset
+    </a>
+{% endmacro %}
+
+{% macro quick() %}
+    <div class="input-field">
+        <select id="vectorizer">
+            <option value="count" selected>Count Vectorizer</option>
+            <option value="hashing">Hashing Vectorizer</option>
+            <option value="tfidf">Tf-Idf Vectorizer</option>
+        </select>
+        <label>Vectorizer</label>
+    </div>
+
+    <div class="input-field">
+        <select id="decomposition">
+            <option value="none" selected>None</option>
+            <option value="tsne">t-SNE</option>
+            <option value="mds">MDS</option>
+        </select>
+        <label>Decomposition</label>
+    </div>
+
+    <div class="input-field">
+        <select multiple id="algorithms">
+            <option value="" disabled>Choose your options</option>
+            <option value="nb" selected>Naive Bayes</option>
+            <option value="logisticregression" selected>Logistic Regression</option>
+            <option value="knn">K Nearest Neighbors</option>
+            <option value="randomforest">Random Forest</option>
+{#            <option value="linearsvc">Linear SVC</option>#}
+            <option value="svc">SVC</option>
+            <option value="adaboost">AdaBoost</option>
+        </select>
+        <label>Classification Algorithms</label>
+    </div>
+{% endmacro %}
+
+{%  macro run_button() %}
+    <a href="#" class="valign-wrapper teal-text" id="run-classification">
+        <i class="small material-icons">play_arrow</i>
+        <h6>Run classifications</h6>
+    </a>
+{% endmacro %}

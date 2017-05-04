@@ -1,0 +1,98 @@
+nav {
+    margin-bottom: 15px;
+}
+
+table {
+    font-size: 12px;
+}
+
+.card {
+    margin: 0;
+}
+
+.nav-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+/* logo */
+.logo {
+    width: 48px;
+    height: 48px;
+    margin-top: 10px;
+}
+
+.logo-text {
+    font-family: 'Poiret One', cursive;
+    font-size: larger;
+}
+
+
+/* Parallel coordinates */
+svg {
+  font-size: 12px;
+}
+
+.background path {
+  fill: none;
+  stroke: none;
+  stroke-width: 20px;
+  pointer-events: stroke;
+}
+
+.foreground path {
+  fill: none;
+  stroke: teal;
+  stroke-width: 2px;
+}
+
+.axis .title {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.axis line,
+.axis path {
+  fill: none;
+  stroke: teal;
+  shape-rendering: crispEdges;
+}
+
+g, thead {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.axis.string {
+  font-size: 6px;
+}
+
+.label {
+  -webkit-transition: fill 125ms linear;
+}
+
+.active .label:not(.inactive) {
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.label.inactive {
+  fill: #ccc;
+}
+
+.foreground path.inactive {
+  stroke: #ccc;
+  stroke-opacity: .5;
+  stroke-width: 1px;
+}
+
+.carousel {
+    height: 600px !important;
+}
+
+.carousel .carousel-item {
+    width: 700px !important;
+    height: 700px !important;
+}
