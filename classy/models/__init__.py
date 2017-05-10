@@ -1,3 +1,3 @@
 from .classifiers import classifiers, classifier_names
 from .decomposition import dimension_reduction
-from .vectorizers import get_vectors
+from .embeddings import get_vectors

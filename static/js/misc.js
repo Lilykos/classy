@@ -3,7 +3,7 @@ function getData() {
         labelsType: $('#label-type').val(),
 
         // text
-        vectorizer: $('#vectorizer').val(),
+        embedding: $('#embedding').val(),
         norm: $('#normalizer').val(),
         featureNumber: $('#numfeatures').val(),
         dimensionsNumber: $('#numdimensions').val(),
@@ -15,4 +15,21 @@ function getData() {
         decompositionMetric: $('#decomposition-metric').val(),
         algorithms: $('#algorithms').val()
     }
+}
+
+function renderPlots(data) {
+    $('#confusion-matrix').html(data.confusion_matrix);
+    $('#prec-rec').html(data.precrec);
+    $('#roc-curves').html(data.roc);
+}
+
+function unhideCards() {
+    var selectors = [
+        '#parallel-container',
+        '#confusion-matrix-container',
+        '#precision-recall-container',
+        '#roc-curves-container'
+    ];
+    selectors.forEach(function (sel) { $(sel).removeClass('hide'); });
+    $('.carousel').carousel();
 }

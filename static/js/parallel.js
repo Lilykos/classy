@@ -33,11 +33,15 @@ function plot_parallel_coordinates(data) {
     // DIMENSIONS ACCORDING TO LABELS - BINARY/MULTICLASS
     var dimensions_binary = [
         {
-            name: "name",
+            name: "Name",
             scale: d3.scale.ordinal().rangePoints([0, height]),
             type: "string"
         }, {
-            name: "Accuracy",
+            name: "Acc. (Train)",
+            scale: d3.scale.linear().range([height, 0]),
+            type: "number"
+        },{
+            name: "Acc. (Test)",
             scale: d3.scale.linear().range([height, 0]),
             type: "number"
         }, {
@@ -57,7 +61,7 @@ function plot_parallel_coordinates(data) {
 
         var dimensions_multiclass = [
         {
-            name: "name",
+            name: "Name",
             scale: d3.scale.ordinal().rangePoints([0, height]),
             type: "string"
         }, {
@@ -124,7 +128,7 @@ function plot_parallel_coordinates(data) {
     dimensions.forEach(function(dimension) {
         dimension.scale.domain(dimension.type === "number"
             ? [0, 1]
-            : data.map(function(d) { return d.name; }));
+            : data.map(function(d) { return d['Name']; }));
     });
 
     svg.append("g")
@@ -161,11 +165,7 @@ function plot_parallel_coordinates(data) {
         .on("mouseout", mouseout)
         .attr('class', 'tooltipped')
         .attr('data-tooltip', function (d) {
-            var tip = '';
-            for (var k in d) {
-                tip += k + ': ' + d[k] + '<br>';
-            }
-            return tip;
+            return tmpl("tmpl-demo", d);
         });
 
     $('.tooltipped').tooltip({delay: 50, html: true});

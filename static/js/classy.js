@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var textFile;
     var labelsFile;
     $('#text-input').on('change', function() { textFile = this.files[0]; });
@@ -48,25 +48,11 @@ $(document).ready(function() {
 
                 // parallel coordinates (and rest of the plots)
                 plot_parallel_coordinates(data.results);
-                $('#confusion-matrix').html(data.confusion_matrix);
-                $('#prec-rec').html(data.prec_rec_curve);
-                $('#roc-curves').html(data.roc_curves);
+                renderPlots(data);
 
-                // scores table
-                $('#results-table-container').html(data.results_table);
-                $('#results-table-container').modal({dismissible: true, opacity: .6});
-                $("#scores-table").stupidtable();
-
-                // show everything and remove loading screen
-                $('#parallel-container').removeClass('hide');
-                $('#confusion-matrix-container').removeClass('hide');
-                $('#precision-recall-container').removeClass('hide');
-                $('#roc-curves-container').removeClass('hide');
-
-                $('.carousel').carousel();
-                $(document).ready(function() {
-                   $('#loading-screen').modal('close');
-                });
+                // show everything and remove loading screen modal
+                unhideCards();
+                $(function() { $('#loading-screen').modal('close');});
             }
         });
     });

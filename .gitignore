@@ -150,4 +150,4 @@ text_data.txt
 labels_data.txt
 /static/img/cm
 /static/img/roc
-/static/img/prec_rec
+/static/img/precrec

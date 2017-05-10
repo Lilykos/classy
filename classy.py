@@ -2,7 +2,7 @@ import json
 import os
 from flask import Flask, render_template, request, jsonify
 from flask_script import Manager, Server
-from classy import logger, OK_200, save_files, get_classification_results, nocache
+from classy import logger, OK_200, save_files, get_classification_results, nocache, create_folders
 
 app = Flask(__name__)
 
@@ -26,12 +26,9 @@ def classify():
     attrs = json.loads(request.form.get('data'))
     results = get_classification_results(attrs)
     return jsonify(**{'results': results,
-                      'confusion_matrix': render_template('viz/confusion_matrix.html', algorithms=attrs['algorithms']),
-                      'roc_curves': render_template('viz/roc_curves.html', algorithms=attrs['algorithms']),
-                      'prec_rec_curve': render_template('viz/precision_recall.html', algorithms=attrs['algorithms']),
-                      'results_table': render_template('results_table.html',
-                                                       label_type=attrs['labelsType'],
-                                                       classifiers=results)})
+                      'confusion_matrix': render_template('plots/templ.html', algorithms=attrs['algorithms'], plot='cm'),
+                      'roc': render_template('plots/templ.html', algorithms=attrs['algorithms'], plot='roc'),
+                      'precrec': render_template('plots/templ.html', algorithms=attrs['algorithms'], plot='precrec')})
 
 
 manager = Manager(app)
@@ -49,10 +46,6 @@ if __name__ == '__main__':
         """)
 
     local_dir = os.path.dirname(__file__)
-    paths = [os.path.join(local_dir, path)
-             for path in ['static/img/cm', 'static/img/roc', 'static/img/prec_rec']]
+    create_folders(local_dir)
 
-    for path in paths:
-        if not os.path.exists(path):
-            os.makedirs(path)
     manager.run()

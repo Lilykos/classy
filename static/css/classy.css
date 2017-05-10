@@ -2,12 +2,12 @@ nav {
     margin-bottom: 15px;
 }
 
-table {
-    font-size: 12px;
-}
-
 .card {
     margin: 0;
+}
+
+.navbar-fixed {
+    height: 80px;
 }
 
 .nav-wrapper {

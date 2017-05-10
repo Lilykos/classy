@@ -24,7 +24,7 @@ def dimension_reduction(X, attrs):
     """Dimension reduction."""
     decomp = attrs['decomposition']
     metric = attrs['decompositionMetric']
-    dimensions = attrs['dimensionsNumber']
+    dimensions = int(attrs['dimensionsNumber'])
 
     model = reduction_models[decomp](X, metric, dimensions)
     return model.embedding_

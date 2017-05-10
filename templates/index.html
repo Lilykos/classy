@@ -9,17 +9,27 @@
     <link rel="stylesheet" type="text/css" href="../static/css/classy.css"/>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-JavaScript-Templates/3.8.0/js/tmpl.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stupidtable/1.0.3/stupidtable.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
     <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="../static/js/parallel.js"></script>
     <script type="text/javascript" src="../static/js/misc.js"></script>
     <script type="text/javascript" src="../static/js/classy.js"></script>
+    {% raw %}
+    <script type="text/x-tmpl" id="tmpl-demo">
+        <table class="responsive-table centered">
+            <thead><tr>{% for (var k in o) { %}<th>{%=k%}</th>{% } %}</tr></thead>
+            <tbody><tr>{% for (var k in o) { %}<td>{%=o[k]%}</td>{% } %}</tr></tbody>
+        </table>
+    </script>
+    {% endraw %}
 </head>
 
 
 <body class="grey lighten-4">
     <!-- NAVBAR -->
+    <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper teal">
             <a href="#!" class="brand-logo">
@@ -30,10 +40,10 @@
             </ul>
         </div>
     </nav>
+    </div>
 
 
     <div class="row">
-
         <!-- OPTIONS -->
         <div class="col s3">
             <div class="card z-depth-3">
@@ -42,80 +52,31 @@
                     <p>Select the files (text and labels), text options and classification algorithms.</p>
                 </div>
 
-                {% from 'options/input_options.html' import input, quick, run_button %}
+                {% from 'options/input.html' import input, quick, run_button %}
                 <div class="card-tabs">
                     <ul class="tabs tabs-fixed-width">
                         <li class="tab"><a href="#input" class="active">Input</a></li>
                         <li class="tab disabled grey lighten-4"><a href="#quick-options">Quick Options</a></li>
                     </ul>
                 </div>
+
                 <div class="card-content grey lighten-4">
                     <div id="input">{{ input() }}</div>
                     <div id="quick-options">{{ quick() }}</div>
                 </div>
 
-                <div class="card-action hide">
-                    {{ run_button() }}
-                </div>
+                <div class="card-action hide">{{ run_button() }}</div>
             </div>
         </div>
 
         <!-- RESULTS -->
         <div class="col s9">
-
-            <!-- PARALLEL COORDINATES -->
-            <div class="row">
-                <div class="col s12" id="width-id">
-                    <div class="card z-depth-3 hide" id="parallel-container">
-                        <div class="card-content">
-                            <span class="card-title">Classification Results</span><br>
-                            <div class="row" id="parallel"></div>
-                            <div class="card-action hide">
-                                <a href="#results-table" class="valign-wrapper teal-text">
-                                    <i class="small material-icons">zoom_in</i>
-                                    <h6>Score Summary</h6>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CONFUSION MATRIX -->
-            <div class="row">
-                <div class="col s12">
-                    <div class="card z-depth-3 hide" id="confusion-matrix-container">
-                        <div class="card-content">
-                            <span class="card-title">Confusion Matrix</span><br>
-                            <div class="row" id="confusion-matrix"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PRECISION - RECALL -->
-            <div class="row">
-                <div class="col s12">
-                    <div class="card z-depth-3 hide" id="precision-recall-container">
-                        <div class="card-content">
-                            <span class="card-title">Precision-Recall</span><br>
-                            <div class="row" id="prec-rec"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ROC CURVES -->
-            <div class="row">
-                <div class="col s12">
-                    <div class="card z-depth-3 hide" id="roc-curves-container">
-                        <div class="card-content">
-                            <span class="card-title">ROC Curves</span><br>
-                            <div class="row" id="roc-curves"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% from 'plots/card.html' import plot_area %}
+            <!-- PLOTS -->
+            {{ plot_area("parallel-container", "Classification Results", "parallel") }}
+            {{ plot_area("confusion-matrix-container", "Confusion Matrix", "confusion-matrix") }}
+            {{ plot_area("precision-recall-container", "Precision-Recall", "prec-rec") }}
+            {{ plot_area("roc-curves-container", "ROC Curves", "roc-curves") }}
         </div>
     </div>
 
@@ -132,23 +93,17 @@
         </div>
     </div>
 
-
     <!-- OPTIONS MODAL -->
     <div id="edit-options" class="modal bottom-sheet">
         <div class="modal-content">
-            <div class="container row">
-                {% from 'options/general_options.html' import text, classifiers %}
-                <div class="col s6">{{ text() }}</div>
-                <div class="col s6">{{ classifiers() }}</div>
+            <div class="row">
+                {% from 'options/general.html' import text, classifiers, dimension_reduction %}
+                <div class="col s4">{{ text() }}</div>
+                <div class="col s4">{{ dimension_reduction() }}</div>
+                <div class="col s4">{{ classifiers() }}</div>
             </div>
         </div>
     </div>
 
-    <!-- RESULTS TABLE MODAL -->
-    <div id="results-table" class="modal">
-        <div class="modal-content">
-            <div class="row" id="results-table-container"></div>
-        </div>
-    </div>
 </body>
 </html>

@@ -1,4 +1,5 @@
 import sys
+import os
 import logging
 import json
 from functools import wraps, update_wrapper
@@ -38,7 +39,15 @@ def nocache(view):
     return update_wrapper(no_cache, view)
 
 
-@log('Saving files.')
+@log('Input: Creating folders.')
+def create_folders(local_dir):
+    paths = [os.path.join(local_dir, path) for path in ['static/img/cm', 'static/img/roc', 'static/img/precrec']]
+    for path in paths:
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+
+@log('Input: Saving files.')
 def save_files(request):
     """Save the data files (using standard names)."""
     text_file = request.files['textFile']
@@ -48,7 +57,7 @@ def save_files(request):
     labels_file.save('labels_data.txt')
 
 
-@log('Retrieving data.')
+@log('Input: Retrieving data.')
 def get_data_from_files():
     """Load the data files."""
     text = list(open('text_data.txt', 'r'))

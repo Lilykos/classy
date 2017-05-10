@@ -1,12 +1,11 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from sklearn.metrics import precision_recall_fscore_support
 
 from scikitplot.plotters import plot_confusion_matrix, plot_precision_recall_curve, plot_roc_curve
 
 from .models import classifier_names, classifiers, dimension_reduction, get_vectors
-from .utils import log, get_data_from_files
+from .utils import get_data_from_files
 
 
 def make_plots(y_test, y_pred, y_prob, algorithm):
@@ -17,7 +16,7 @@ def make_plots(y_test, y_pred, y_prob, algorithm):
 
     plot_precision_recall_curve(y_test, y_prob, figsize=(20, 20), title_fontsize='40',
                                 text_fontsize='25', title=classifier_names[algorithm])
-    plt.savefig('static/img/prec_rec/' + algorithm + '.png', dpi=200)
+    plt.savefig('static/img/precrec/' + algorithm + '.png', dpi=200)
     plt.close('all')
 
     plot_roc_curve(y_test, y_prob, figsize=(20, 20), title_fontsize='40',
@@ -50,7 +49,6 @@ def update_multiclass(result, y_test, y_pred):
     return result
 
 
-@log('Classification results.')
 def get_classification_results(attrs):
     text, labels = get_data_from_files()
     features = get_vectors(text, attrs)
@@ -72,9 +70,9 @@ def get_classification_results(attrs):
         y_prob = model.predict_proba(X_test)
 
         result = {
-            'name': classifier_names[algorithm],
-            'labels': np.unique(y_test).tolist(),
-            'Accuracy': '{:.4f}'.format(accuracy_score(y_test, y_pred)),
+            'Name': classifier_names[algorithm],
+            'Acc. (Train)': '{:.4f}'.format(model.score(X_train, y_train)),
+            'Acc. (Test)': '{:.4f}'.format(model.score(X_test, y_test)),
         }
 
         # update for multiclass/binary specific

@@ -33,21 +33,12 @@
 
 {% macro quick() %}
     <div class="input-field">
-        <select id="vectorizer">
+        <select id="embedding">
             <option value="count" selected>Count Vectorizer</option>
             <option value="hashing">Hashing Vectorizer</option>
             <option value="tfidf">Tf-Idf Vectorizer</option>
         </select>
-        <label>Vectorizer</label>
-    </div>
-
-    <div class="input-field">
-        <select id="decomposition">
-            <option value="none" selected>None</option>
-            <option value="tsne">t-SNE</option>
-            <option value="mds">MDS</option>
-        </select>
-        <label>Decomposition</label>
+        <label>Embedding</label>
     </div>
 
     <div class="input-field">

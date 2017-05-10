@@ -1,0 +1,5 @@
+<div class="carousel">
+    {% for alg in algorithms %}
+    <a class="carousel-item" href="#{{ alg }}-{{ plot }}-tab"><img src="../static/img/{{ plot }}/{{ alg }}.png"></a>
+    {% endfor %}
+</div>

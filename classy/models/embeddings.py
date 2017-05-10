@@ -17,27 +17,38 @@ stop = lambda attrs: stopwords if attrs['stop'] else None
 norm = lambda attrs: None if attrs['norm'] == 'none' else attrs['norm']
 
 
-@log('Creating text vectors.')
+@log('Embedding: Tf-Idf')
+def tfidf(text, attrs):
+    stop_, norm_, features = stop(attrs), norm(attrs), int(attrs['featureNumber'])
+    return TfidfVectorizer(max_features=features, norm=norm_, stop_words=stop_).fit_transform(text)
+
+
+@log('Embedding: Hashing')
+def hashing(text, attrs):
+    stop_, norm_, features = stop(attrs), norm(attrs), int(attrs['featureNumber'])
+    return HashingVectorizer(n_features=features, non_negative=True, norm=norm_, stop_words=stop_).fit_transform(text)
+
+
+@log('Embedding: Count (BoW)')
+def count(text, attrs):
+    stop_, norm_, features = stop(attrs), norm(attrs), int(attrs['featureNumber'])
+    return CountVectorizer(max_features=features, stop_words=stop_).fit_transform(text)
+
+
+embeddings = {
+    'hashing': hashing,
+    'tfidf': tfidf,
+    'count': count
+}
+
+
 def get_vectors(text, attrs):
-    text = parallelize(text, _strip_punct)          # remove punctuation
+    text = parallelize(text, _strip_punct)  # remove punctuation
     if attrs['stem']:
-        text = parallelize(text, _stem)             # stem if in options
+        text = parallelize(text, _stem)     # stem if in options
 
-    X = get_vectorizer(attrs).fit_transform(text)   # vectorize
+    X = embeddings[attrs['embedding']](text, attrs)
     return X.toarray()
-
-
-def get_vectorizer(attrs):
-    """Returna a vectorizer with the user options."""
-    stop_ = stop(attrs)
-    norm_ = norm(attrs)
-    features = int(attrs['featureNumber'])
-    vectorizers = {
-        'hashing': HashingVectorizer(n_features=features, non_negative=True, norm=norm_, stop_words=stop_),
-        'tfidf': TfidfVectorizer(max_features=features, norm=norm_, stop_words=stop_),
-        'count': CountVectorizer(max_features=features, stop_words=stop_)
-    }
-    return vectorizers[attrs['vectorizer']]
 
 
 def _stem(row):
