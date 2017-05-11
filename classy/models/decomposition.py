@@ -1,30 +1,33 @@
+from sklearn.base import TransformerMixin
 from sklearn.manifold import MDS, TSNE
 from sklearn.metrics.pairwise import pairwise_distances
 from ..utils import log
 
 
-@log('Decomposition: t-SNE')
-def tsne(X, metric, dimensions):
-    return TSNE(n_components=dimensions, learning_rate=100, perplexity=15, metric=metric).fit(X)
+class DecompositionTransformer(TransformerMixin):
+    @log('Decomposition: t-SNE')
+    def _tsne(self, X):
+        return TSNE(n_components=self.dimensions, learning_rate=100, perplexity=15, metric=self.metric).fit(X)
 
+    @log('Decomposition: MDS')
+    def _mds(self, X):
+        X = pairwise_distances(X, metric=self.metric)
+        return MDS(n_components=self.dimensions, dissimilarity='precomputed', random_state=42, n_jobs=-1).fit(X)
 
-@log('Decomposition: MDS')
-def mds(X, metric, dimensions):
-    X = pairwise_distances(X, metric=metric)
-    return MDS(n_components=dimensions, dissimilarity='precomputed', random_state=42, n_jobs=-1).fit(X)
+    def __init__(self, attrs):
+        self.decomp_models = {
+            'tsne': self._tsne,
+            'mds': self._mds
+        }
+        self.decomp = attrs['decomposition']
+        self.metric = attrs['decompositionMetric']
+        self.dimensions = int(attrs['dimensionsNumber'])
 
+    def fit(self, y=None):
+        return self
 
-reduction_models = {
-    'tsne': tsne,
-    'mds': mds
-}
-
-
-def dimension_reduction(X, attrs):
-    """Dimension reduction."""
-    decomp = attrs['decomposition']
-    metric = attrs['decompositionMetric']
-    dimensions = int(attrs['dimensionsNumber'])
-
-    model = reduction_models[decomp](X, metric, dimensions)
-    return model.embedding_
+    def transform(self, X, y=None):
+        if self.decomp != 'none':
+            model = self.decomp_models[self.decomp](X)
+            return model.embedding_
+        return X

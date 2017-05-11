@@ -1,28 +1,31 @@
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_recall_fscore_support
-
+from sklearn.pipeline import make_pipeline
 from scikitplot.plotters import plot_confusion_matrix, plot_precision_recall_curve, plot_roc_curve
 
-from .models import classifier_names, classifiers, dimension_reduction, get_vectors
+from .models import classifier_names, ClassifierSelector, VectorTransformer, \
+    DecompositionTransformer, PreprocessTransformer
 from .utils import get_data_from_files
 
 
 def make_plots(y_test, y_pred, y_prob, algorithm):
-    plot_confusion_matrix(y_test, y_pred, normalize=True, figsize=(20, 20), title_fontsize='40',
-                          text_fontsize='30', title=classifier_names[algorithm])
-    plt.savefig('static/img/cm/' + algorithm + '.png', dpi=200)
-    plt.close('all')
+    def _save_and_close(type):
+        plt.savefig('static/img/{}/{}.png'.format(type, algorithm), dpi=200)
+        plt.close('all')
 
-    plot_precision_recall_curve(y_test, y_prob, figsize=(20, 20), title_fontsize='40',
-                                text_fontsize='25', title=classifier_names[algorithm])
-    plt.savefig('static/img/precrec/' + algorithm + '.png', dpi=200)
-    plt.close('all')
+    size = (20, 20)
+    name = classifier_names[algorithm]
 
-    plot_roc_curve(y_test, y_prob, figsize=(20, 20), title_fontsize='40',
-                   text_fontsize='25', title=classifier_names[algorithm])
-    plt.savefig('static/img/roc/' + algorithm + '.png', dpi=200)
-    plt.close('all')
+    plot_confusion_matrix(y_test, y_pred, normalize=True, figsize=size, title_fontsize=40, text_fontsize=30, title=name)
+    _save_and_close('cm')
+
+    if y_prob is not None:
+        plot_precision_recall_curve(y_test, y_prob, figsize=size, title_fontsize=40, text_fontsize=25, title=name)
+        _save_and_close('precrec')
+
+        plot_roc_curve(y_test, y_prob, figsize=size, title_fontsize=40, text_fontsize=25, title=name)
+        _save_and_close('roc')
 
 
 def update_binary(result, y_test, y_pred, pos):
@@ -51,23 +54,17 @@ def update_multiclass(result, y_test, y_pred):
 
 def get_classification_results(attrs):
     text, labels = get_data_from_files()
-    features = get_vectors(text, attrs)
 
-    if attrs['decomposition'] != 'none':
-        features = dimension_reduction(features, attrs)
+    pipeline = make_pipeline(PreprocessTransformer(attrs),
+                             VectorTransformer(attrs),
+                             DecompositionTransformer(attrs))
 
-    # train/test split of the data
+    features = pipeline.transform(text)
     X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 
     results = []
     for algorithm in attrs['algorithms']:
-        # hack for NB/ Multinomial NB
-        if algorithm == 'nb' and attrs['labelsType'] != 'binary':
-            algorithm = 'multinomialnb'
-
-        model = classifiers[algorithm](X_train, y_train)
-        y_pred = model.predict(X_test)
-        y_prob = model.predict_proba(X_test)
+        model, y_pred, y_prob = ClassifierSelector(attrs, algorithm, X_test).transform(X_train, y_train)
 
         result = {
             'Name': classifier_names[algorithm],

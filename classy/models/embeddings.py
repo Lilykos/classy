@@ -1,61 +1,34 @@
+from sklearn.base import TransformerMixin
 from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer, CountVectorizer
-from gensim.parsing.preprocessing import strip_punctuation, stem
-from ..utils import parallelize, log
-
-stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself',
-             'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself',
-             'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these',
-             'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do',
-             'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while',
-             'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before',
-             'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again',
-             'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each',
-             'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than',
-             'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now']
-
-stop = lambda attrs: stopwords if attrs['stop'] else None
-norm = lambda attrs: None if attrs['norm'] == 'none' else attrs['norm']
+from ..utils import log
 
 
-@log('Embedding: Tf-Idf')
-def tfidf(text, attrs):
-    stop_, norm_, features = stop(attrs), norm(attrs), int(attrs['featureNumber'])
-    return TfidfVectorizer(max_features=features, norm=norm_, stop_words=stop_).fit_transform(text)
+class VectorTransformer(TransformerMixin):
+    @log('Embedding: Tf-Idf')
+    def _tfidf(self, text):
+        return TfidfVectorizer(max_features=self.features, norm=self.norm).fit_transform(text)
 
+    @log('Embedding: Hashing')
+    def _hashing(self, text):
+        return HashingVectorizer(n_features=self.features, non_negative=True, norm=self.norm).fit_transform(text)
 
-@log('Embedding: Hashing')
-def hashing(text, attrs):
-    stop_, norm_, features = stop(attrs), norm(attrs), int(attrs['featureNumber'])
-    return HashingVectorizer(n_features=features, non_negative=True, norm=norm_, stop_words=stop_).fit_transform(text)
+    @log('Embedding: Count (BoW)')
+    def _count(self, text):
+        return CountVectorizer(max_features=self.features).fit_transform(text)
 
+    def __init__(self, attrs):
+        self.embeddings = {
+            'hashing': self._hashing,
+            'tfidf': self._tfidf,
+            'count': self._count
+        }
+        self.norm = None if attrs['norm'] == 'none' else attrs['norm']
+        self.features = int(attrs['featureNumber'])
+        self.embedding = attrs['embedding']
 
-@log('Embedding: Count (BoW)')
-def count(text, attrs):
-    stop_, norm_, features = stop(attrs), norm(attrs), int(attrs['featureNumber'])
-    return CountVectorizer(max_features=features, stop_words=stop_).fit_transform(text)
+    def fit(self, y=None):
+        return self
 
-
-embeddings = {
-    'hashing': hashing,
-    'tfidf': tfidf,
-    'count': count
-}
-
-
-def get_vectors(text, attrs):
-    text = parallelize(text, _strip_punct)  # remove punctuation
-    if attrs['stem']:
-        text = parallelize(text, _stem)     # stem if in options
-
-    X = embeddings[attrs['embedding']](text, attrs)
-    return X.toarray()
-
-
-def _stem(row):
-    """Process a single item, to be used in parallel."""
-    return stem(row)
-
-
-def _strip_punct(row):
-    """Remove punctuation."""
-    return strip_punctuation(row)
+    def transform(self, text, y=None):
+        X = self.embeddings[self.embedding](text)
+        return X.toarray()

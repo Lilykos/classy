@@ -27,6 +27,7 @@ def log(msg):
 
 
 def nocache(view):
+    """Experimental, fix caching"""  #TODO
     @wraps(view)
     def no_cache(*args, **kwargs):
         response = make_response(view(*args, **kwargs))
@@ -41,6 +42,7 @@ def nocache(view):
 
 @log('Input: Creating folders.')
 def create_folders(local_dir):
+    """Create the required folders for the plots."""
     paths = [os.path.join(local_dir, path) for path in ['static/img/cm', 'static/img/roc', 'static/img/precrec']]
     for path in paths:
         if not os.path.exists(path):
