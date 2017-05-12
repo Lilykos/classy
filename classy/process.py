@@ -60,7 +60,8 @@ def get_classification_results(attrs):
                              DecompositionTransformer(attrs))
 
     features = pipeline.transform(text)
-    X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(features, labels,
+                                                        test_size=0.3, random_state=42, stratify=labels)
 
     results = []
     for algorithm in attrs['algorithms']:
