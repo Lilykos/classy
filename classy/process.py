@@ -100,4 +100,6 @@ def get_classification_results(attrs):
 
     venn2_wordcloud(sets)
     plt.savefig('static/img/venn/venn_words.png', dpi=200)
+    plt.close('all')
+
     return results, timestamp
