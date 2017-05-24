@@ -28,7 +28,8 @@ function unhideCards() {
         '#parallel-container',
         '#confusion-matrix-container',
         '#precision-recall-container',
-        '#roc-curves-container'
+        '#roc-curves-container',
+        '#venn-container'
     ];
     selectors.forEach(function (sel) { $(sel).removeClass('hide'); });
     $('.carousel').carousel();

@@ -1,4 +1,7 @@
+from collections import Counter
+import time
 import matplotlib.pyplot as plt
+from matplotlib_venn_wordcloud import venn2_wordcloud
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.pipeline import make_pipeline
@@ -9,9 +12,13 @@ from .models import classifier_names, ClassifierSelector, VectorTransformer, \
 from .utils import get_data_from_files
 
 
-def make_plots(y_test, y_pred, y_prob, algorithm):
+def venn_wordcloud(sets_of_words):
+    pass
+
+
+def make_plots(y_test, y_pred, y_prob, algorithm, timestamp):
     def _save_and_close(type):
-        plt.savefig('static/img/{}/{}.png'.format(type, algorithm), dpi=200)
+        plt.savefig('static/img/{}/{}-{}.png'.format(type, algorithm, timestamp), dpi=200)
         plt.close('all')
 
     size = (20, 20)
@@ -53,15 +60,15 @@ def update_multiclass(result, y_test, y_pred):
 
 
 def get_classification_results(attrs):
-    text, labels = get_data_from_files()
+    timestamp = time.time()
+    df = get_data_from_files()
+    df['processed'] = PreprocessTransformer(attrs).transform(df['text'])
 
-    pipeline = make_pipeline(PreprocessTransformer(attrs),
-                             VectorTransformer(attrs),
-                             DecompositionTransformer(attrs))
+    pipeline = make_pipeline(VectorTransformer(attrs), DecompositionTransformer(attrs))
+    features = pipeline.transform(df['processed'])
 
-    features = pipeline.transform(text)
-    X_train, X_test, y_train, y_test = train_test_split(features, labels,
-                                                        test_size=0.3, random_state=42, stratify=labels)
+    X_train, X_test, y_train, y_test = train_test_split(features, df['label'],
+                                                        test_size=0.3, random_state=42, stratify=df['label'])
 
     results = []
     for algorithm in attrs['algorithms']:
@@ -79,5 +86,19 @@ def get_classification_results(attrs):
             else update_multiclass(result, y_test, y_pred)
         results.append(result)
 
-        make_plots(y_test, y_pred, y_prob, algorithm)
-    return results
+        make_plots(y_test, y_pred, y_prob, algorithm, timestamp)
+
+    # venn word diagram
+    sets = []
+    for label in df['label'].unique():
+        docs = df[df['label'] == label]['processed'].values
+        text = ' '.join(docs)
+        counter = Counter(text.split())
+        sets.append(' '.join(
+            [item[0] for item in counter.most_common(20)]
+        ))
+
+    import ipdb ; ipdb.set_trace()
+    venn2_wordcloud(sets)
+    plt.savefig('static/img/venn/venn_words.png', dpi=200)
+    return results, timestamp

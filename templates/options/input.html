@@ -17,6 +17,15 @@
         </div>
     </form>
 
+    <form action="#">
+        <div class="file-field input-field">
+            <div class="btn"><i class="material-icons">view_list</i><input type="file" id="w2v-input"></div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" placeholder="Word2Vec trained model">
+            </div>
+        </div>
+    </form>
+
     <div class="input-field">
         <select id="label-type">
             <option value="binary" selected>Binary</option>
@@ -37,6 +46,7 @@
             <option value="count" selected>Count Vectorizer</option>
             <option value="hashing">Hashing Vectorizer</option>
             <option value="tfidf">Tf-Idf Vectorizer</option>
+            <option value="tfidf">Word2Vec Model</option>
         </select>
         <label>Embedding</label>
     </div>

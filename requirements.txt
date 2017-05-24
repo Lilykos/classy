@@ -1,6 +1,11 @@
 scikit-learn
 scikit-plot
+wordcloud
 matplotlib
+matplotlib-venn
+matplotlib
+matplotlib_venn_wordcloud
+pandas
 gensim
 flask
 flask-script

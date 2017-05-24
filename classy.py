@@ -2,33 +2,33 @@ import json
 import os
 from flask import Flask, render_template, request, jsonify
 from flask_script import Manager, Server
-from classy import logger, OK_200, save_files, get_classification_results, nocache, create_folders
+from classy import logger, OK_200, save_files, get_classification_results, create_folders
 
 app = Flask(__name__)
 
 
 @app.route('/')
-@nocache
 def index():
     return render_template('index.html')
 
 
 @app.route('/load_data', methods=['POST'])
-@nocache
 def load():
     save_files(request)
     return OK_200
 
 
 @app.route('/classify', methods=['POST'])
-@nocache
 def classify():
     attrs = json.loads(request.form.get('data'))
-    results = get_classification_results(attrs)
+    results, timestamp = get_classification_results(attrs)
     return jsonify(**{'results': results,
-                      'confusion_matrix': render_template('plots/templ.html', algorithms=attrs['algorithms'], plot='cm'),
-                      'roc': render_template('plots/templ.html', algorithms=attrs['algorithms'], plot='roc'),
-                      'precrec': render_template('plots/templ.html', algorithms=attrs['algorithms'], plot='precrec')})
+                      'confusion_matrix': render_template('plots/templ.html', algorithms=attrs['algorithms'],
+                                                          plot='cm', time=timestamp),
+                      'roc': render_template('plots/templ.html', algorithms=attrs['algorithms'],
+                                             plot='roc', time=timestamp),
+                      'precrec': render_template('plots/templ.html', algorithms=attrs['algorithms'],
+                                                 plot='precrec', time=timestamp)})
 
 
 manager = Manager(app)

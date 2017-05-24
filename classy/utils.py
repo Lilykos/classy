@@ -2,10 +2,7 @@ import sys
 import os
 import logging
 import json
-from functools import wraps, update_wrapper
-from datetime import datetime
-from flask import make_response
-from werkzeug.http import http_date
+import pandas as pd
 from sklearn.externals.joblib import Parallel, delayed
 
 OK_200 = json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
@@ -26,27 +23,15 @@ def log(msg):
     return decorator
 
 
-def nocache(view):
-    """Experimental, fix caching"""  #TODO
-    @wraps(view)
-    def no_cache(*args, **kwargs):
-        response = make_response(view(*args, **kwargs))
-        response.headers['Last-Modified'] = http_date(datetime.now())
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '-1'
-        return response
-
-    return update_wrapper(no_cache, view)
-
-
 @log('Input: Creating folders.')
 def create_folders(local_dir):
     """Create the required folders for the plots."""
-    paths = [os.path.join(local_dir, path) for path in ['static/img/cm', 'static/img/roc', 'static/img/precrec']]
+    paths = [os.path.join(local_dir, path) for path in ['static/img/cm', 'static/img/roc',
+                                                        'static/img/precrec', 'static/img/venn']]
     for path in paths:
         if not os.path.exists(path):
             os.makedirs(path)
+            print(path)
 
 
 @log('Input: Saving files.')
@@ -62,10 +47,11 @@ def save_files(request):
 @log('Input: Retrieving data.')
 def get_data_from_files():
     """Load the data files."""
-    text = list(open('text_data.txt', 'r'))
-    labels = list(open('labels_data.txt', 'r'))
-
-    return text, labels
+    data = {
+        'text': list(open('text_data.txt', 'r')),
+        'label': list(open('labels_data.txt', 'r'))
+    }
+    return pd.DataFrame(data)
 
 
 def parallelize(items, func):

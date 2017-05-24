@@ -32,7 +32,7 @@
     <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper teal">
-            <a href="#!" class="brand-logo">
+            <a href="#" class="brand-logo">
                 <i><img src="../static/img/monocle.png" class="logo"/></i><span class="logo-text">Classy</span>
             </a>
             <ul class="right">
@@ -77,6 +77,19 @@
             {{ plot_area("confusion-matrix-container", "Confusion Matrix", "confusion-matrix") }}
             {{ plot_area("precision-recall-container", "Precision-Recall", "prec-rec") }}
             {{ plot_area("roc-curves-container", "ROC Curves", "roc-curves") }}
+
+            <div class="row">
+                <div class="col s12" id="width-id">
+                    <div class="card z-depth-3 hide" id="venn-container">
+                        <div class="card-content">
+                            <span class="card-title">Important Words Venn by Class</span><br>
+                            <div class="row" id="venn">
+                                <img src="../static/img/venn/venn_words.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
