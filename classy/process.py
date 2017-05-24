@@ -94,11 +94,10 @@ def get_classification_results(attrs):
         docs = df[df['label'] == label]['processed'].values
         text = ' '.join(docs)
         counter = Counter(text.split())
-        sets.append(' '.join(
-            [item[0] for item in counter.most_common(20)]
+        sets.append(set(
+            [item[0] for item in counter.most_common(30)]
         ))
 
-    import ipdb ; ipdb.set_trace()
     venn2_wordcloud(sets)
     plt.savefig('static/img/venn/venn_words.png', dpi=200)
     return results, timestamp

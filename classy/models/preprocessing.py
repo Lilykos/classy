@@ -26,7 +26,7 @@ class PreprocessTransformer(TransformerMixin):
         return parallelize(text, strip_punctuation)
 
     def _remove_stopwords(self, text):
-        return ''.join([word.lower() for word in text.split()
+        return ' '.join([word.lower() for word in text.split()
                         if word not in stopwords
                         and len(word) > 1])
 
