@@ -6,14 +6,14 @@ from sklearn.svm import LinearSVC, SVC
 from sklearn.base import TransformerMixin
 from ..utils import log
 
-classifier_names = {'multinomialnb': 'Multinomial NB', 'knn': 'KNN', 'adaboost': 'AdaBoost', 'linearsvc': 'Linear SVC',
-                    'svc': 'SVC', 'nb': 'Naive Bayes', 'randomforest': 'Random Forest', 'logisticregression': 'Logistic Regression'}
+classifier_names = {'knn': 'KNN', 'adaboost': 'AdaBoost', 'linearsvc': 'Linear SVC', 'svc': 'SVC', 'nb': 'Naive Bayes',
+                    'randomforest': 'Random Forest', 'logisticregression': 'Logistic Regression'}
 
 
 class ClassifierSelector(TransformerMixin):
     @log('Classifier: Naive Bayes')
     def _nb(self, X, y):
-        return GaussianNB().fit(X, y) if self.binary else MultinomialNB().fit(X, y)
+        return GaussianNB().fit(X, y)
 
     @log('Classifier: K Nearest Neighbors')
     def _knn(self, X, y):
