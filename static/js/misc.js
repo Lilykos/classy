@@ -21,6 +21,7 @@ function renderPlots(data) {
     $('#confusion-matrix').html(data.confusion_matrix);
     $('#prec-rec').html(data.precrec);
     $('#roc-curves').html(data.roc);
+    $('#venn-diagram').attr('src', data.venn_path);
 }
 
 function unhideCards() {

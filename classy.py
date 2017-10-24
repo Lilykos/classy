@@ -23,12 +23,14 @@ def classify():
     attrs = json.loads(request.form.get('data'))
     results, timestamp = get_classification_results(attrs)
     return jsonify(**{'results': results,
+                      'venn_path': '../static/img/venn/venn_words-{}.png'.format(timestamp),
                       'confusion_matrix': render_template('plots/templ.html', algorithms=attrs['algorithms'],
                                                           plot='cm', time=timestamp),
                       'roc': render_template('plots/templ.html', algorithms=attrs['algorithms'],
                                              plot='roc', time=timestamp),
                       'precrec': render_template('plots/templ.html', algorithms=attrs['algorithms'],
-                                                 plot='precrec', time=timestamp)})
+                                                 plot='precrec', time=timestamp)
+                      })
 
 
 manager = Manager(app)

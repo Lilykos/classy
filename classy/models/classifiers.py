@@ -1,5 +1,5 @@
 from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import MultinomialNB, GaussianNB
+from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.svm import LinearSVC, SVC

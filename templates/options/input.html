@@ -1,4 +1,5 @@
 {% macro input() %}
+    <!-- TEXT -->
     <form action="#">
         <div class="file-field input-field">
             <div class="btn"><i class="material-icons">subject</i><input type="file" id="text-input"></div>
@@ -8,6 +9,7 @@
         </div>
       </form>
 
+    <!-- LABELS -->
     <form action="#">
         <div class="file-field input-field">
             <div class="btn"><i class="material-icons">view_list</i><input type="file" id="labels-input"></div>
@@ -17,15 +19,17 @@
         </div>
     </form>
 
-    <form action="#">
-        <div class="file-field input-field">
-            <div class="btn"><i class="material-icons">view_list</i><input type="file" id="w2v-input"></div>
-            <div class="file-path-wrapper">
-                <input class="file-path validate" type="text" placeholder="Word2Vec trained model">
-            </div>
-        </div>
-    </form>
+{#    <!-- W2V MODEL -->#}
+{#    <form action="#">#}
+{#        <div class="file-field input-field">#}
+{#            <div class="btn"><i class="material-icons">view_list</i><input type="file" id="w2v-input"></div>#}
+{#            <div class="file-path-wrapper">#}
+{#                <input class="file-path validate" type="text" placeholder="Word2Vec trained model">#}
+{#            </div>#}
+{#        </div>#}
+{#    </form>#}
 
+    <!-- LABELS TYPES -->
     <div class="input-field">
         <select id="label-type">
             <option value="binary" selected>Binary</option>
@@ -40,17 +44,20 @@
     </a>
 {% endmacro %}
 
+
 {% macro quick() %}
+    <!-- VECTORIZERS -->
     <div class="input-field">
         <select id="embedding">
             <option value="count" selected>Count Vectorizer</option>
             <option value="hashing">Hashing Vectorizer</option>
             <option value="tfidf">Tf-Idf Vectorizer</option>
-            <option value="tfidf">Word2Vec Model</option>
+            <option value="tfidf" disabled>Word2Vec Model</option>
         </select>
         <label>Embedding</label>
     </div>
 
+    <!-- ALGORITHMS -->
     <div class="input-field">
         <select multiple id="algorithms">
             <option value="" disabled>Choose your options</option>

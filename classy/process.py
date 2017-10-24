@@ -95,11 +95,11 @@ def get_classification_results(attrs):
         text = ' '.join(docs)
         counter = Counter(text.split())
         sets.append(set(
-            [item[0] for item in counter.most_common(30)]
+            [item[0] for item in counter.most_common(80)]
         ))
 
     venn2_wordcloud(sets)
-    plt.savefig('static/img/venn/venn_words.png', dpi=200)
+    plt.savefig('static/img/venn/venn_words-{}.png'.format(timestamp), dpi=200)
     plt.close('all')
 
     return results, timestamp
