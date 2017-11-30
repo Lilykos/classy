@@ -23,4 +23,6 @@ Options
 ![](https://i.imgur.com/wmUDjaw.png)
 
 
-#### Classy was submitted and presented at CIKM '17, Singapore (6-10 Nov, 2017)
+#### Classy was submitted and presented at CIKM '17, Singapore (6-10 Nov, 2017). The poster is following:
+
+![]([Imgur](https://i.imgur.com/hKYE7IE.png))
