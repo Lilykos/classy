@@ -11,4 +11,16 @@ Classy is a visual analytics interface, designed to load a labeled dataset, appl
 Just download the project, install the requirements, and then `python manage.py run`, and open the project locally.
 
 ### Screenshots
-![Main Menu](https://imgur.com/s59pXnx)
+
+Main Menu
+![](https://i.imgur.com/s59pXnx.png)
+
+Visualizations
+![](https://i.imgur.com/0NegvFo.png)
+![](https://i.imgur.com/JKEOF77.png)
+
+Options
+![](https://i.imgur.com/wmUDjaw.png)
+
+
+#### Classy was submitted and presented at CIKM '17, Singapore (6-10 Nov, 2017)
